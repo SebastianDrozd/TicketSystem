@@ -1,11 +1,18 @@
+require('dotenv').config()
 const express = require("express")
 const app = express()
 const path = require("path")
 const port = process.env.PORT || 3000
-
-
+const {logger} = require('./middleware/logger.js')
+const errorHandler = require('./middleware/errorHandler.js')
+const cookieParser = require('cookie-parser')
+const cors = require('cors')
+const corsOptions = require('./config/corsOptions.js')
 //middleware
+app.use(logger)
+app.use(cors(corsOptions))
 app.use(express.json())
+app.use(cookieParser())
 
 
 
@@ -29,7 +36,7 @@ app.all("*",(req,res) => {
 
 
 
-
+app.use(errorHandler)
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`)
